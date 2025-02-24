@@ -1,6 +1,5 @@
-import psycopg
+
 from database import get_connection
-import psycopg2
 import uuid
 
 # Criar um novo chat no banco de dados
