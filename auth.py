@@ -11,7 +11,7 @@ load_dotenv()
 # 🔹 Configurações do Clerk
 CLERK_JWKS_URL = "https://clerk.your-domain.com/.well-known/jwks.json" 
 CLERK_AUDIENCE = "your-clerk-audience"  
-AUTENTICACAO_ATIVADA = True 
+AUTENTICACAO_ATIVADA = False 
 
 security = HTTPBearer()  # Middleware de autenticação
 

@@ -7,7 +7,7 @@ from auth import authenticate_request  # 🔒 Middleware de autenticação
 import time
 
 # Variável para ativar/desativar
-AUTENTICACAO_ATIVADA = True
+AUTENTICACAO_ATIVADA = False
 
 app = FastAPI()
 
