@@ -4,4 +4,3 @@ langchain_community==0.0.1
 langchain_text_splitters==0.0.1
 docx==0.2.4
 python-docx==0.8.11
-time
