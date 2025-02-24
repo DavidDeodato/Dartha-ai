@@ -11,6 +11,11 @@ AUTENTICACAO_ATIVADA = True
 
 app = FastAPI()
 
+
+@app.get("/")
+def read_root():
+    return {"Hello": "Api Online!"}
+
 # Dicionário de agentes
 agents = {
     "GIX5": GIX5Agent()
