@@ -1,0 +1,8 @@
+psycopg[binary]
+psycopg2
+python-dotenv
+langchain_community
+langchain_text_splitters
+docx
+python-docx
+time
