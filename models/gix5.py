@@ -1,8 +1,11 @@
-from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import OpenAIEmbeddings
-from langchain_openai import OpenAI
 import os
 from dotenv import load_dotenv
+
+# Importações para embeddings e vector store
+from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import OpenAIEmbeddings
+# Importação para o LLM (usando a classe OpenAI, conforme o código antigo)
+from langchain_openai import OpenAI
 
 # Carregar variáveis do ambiente
 load_dotenv()
@@ -17,40 +20,65 @@ class GIX5Agent:
             allow_dangerous_deserialization=True  # Permite carregamento seguro do FAISS
         )
         self.retriever = self.vector_store.as_retriever()
+        # Usando o mesmo LLM do código antigo para garantir o uso do contexto
         self.llm = OpenAI(openai_api_key=OPENAI_API_KEY)
 
     def answer_question(self, question: str, chat_history: list) -> str:
-        """Pipeline de resposta baseado no histórico do chat."""
-
-        # ✅ Transforma o histórico de mensagens em texto legível
+        """
+        Gera uma resposta para a pergunta baseada no histórico do chat e no material do curso GIX5.
+        O fluxo é:
+          1. Formatação do histórico do chat.
+          2. Recuperação de documentos relevantes com base na pergunta.
+          3. Geração de uma resposta inicial com o contexto.
+          4. Refinamento da resposta para torná-la mais clara e didática.
+        """
+        # 1. Formatação do histórico do chat
         history_context = "\n".join(
             [msg["message"] for msg in chat_history if isinstance(msg, dict) and "message" in msg]
         ) if chat_history else "Sem histórico disponível."
 
-        # 🔹 Passo 1: Buscar informações relevantes nos embeddings
+        # 2. Recupera documentos relevantes (para enriquecer o prompt)
         relevant_docs = self.retriever.invoke(question)
-
         if not relevant_docs:
             return "Não encontrei informações no material do curso sobre isso."
 
-        # 🔹 Passo 2: Gerar uma resposta baseada no material e no histórico
-        formatted_input = f"""
-        Histórico do chat:
-        {history_context}
+        # Converter os documentos relevantes para string e ESCAPAR chaves para evitar conflitos no f-string
+        docs_str = str(relevant_docs).replace("{", "{{").replace("}", "}}")
 
-        Baseando-se no material do curso GIX5, responda com clareza e detalhes:
-        {question}
-        """
+        # 3. Criação do prompt inicial integrando o histórico, a pergunta e os documentos
+        formatted_input = f"""
+Histórico do chat:
+{history_context}
+
+Baseando-se no material do curso GIX5, responda com clareza e detalhes a seguinte pergunta:
+{question}
+
+Documentos relevantes:
+{docs_str}
+"""
+        # Chama o LLM para gerar uma resposta inicial com base no prompt formatado
         initial_response = self.llm.invoke(formatted_input)
 
-        # 🔹 Passo 3: Refinar a resposta para torná-la mais objetiva e compreensível
+        # 4. Criação do prompt de refinamento para melhorar a resposta inicial
         refine_prompt = f"""
-        Aqui está uma resposta inicial gerada sobre "{question}":
-        ---
-        {initial_response}
-        ---
-        Agora, reescreva a resposta para que fique mais clara, objetiva e didática, removendo redundâncias e melhorando a legibilidade.
-        """
+Aqui está uma resposta inicial gerada para a pergunta "{question}":
+---
+{initial_response}
+---
+Agora, reescreva a resposta para que fique mais clara, objetiva e didática, removendo redundâncias e melhorando a legibilidade.
+"""
         refined_response = self.llm.invoke(refine_prompt)
 
         return refined_response
+
+# Exemplo de teste (para uso local)
+if __name__ == "__main__":
+    agent = GIX5Agent()
+    # Exemplo de histórico de chat
+    chat_history = [
+        {"message": "Olá, preciso de ajuda com o curso."},
+        {"message": "Não entendi a parte dos embeddings."}
+    ]
+    pergunta = "Como funciona a criação dos embeddings no curso GIX5?"
+    resposta = agent.answer_question(pergunta, chat_history)
+    print("Resposta Refinada:\n", resposta)
