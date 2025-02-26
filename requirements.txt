@@ -10,9 +10,9 @@ uvicorn==0.15.0
 pydantic==1.10.2
 
 # Pacotes do LangChain e integração com OpenAI
-langchain_openai==0.0.2
-langchain_community==0.0.4
-langchain_text_splitters==0.0.1
+langchain_openai>=0.0.2,<0.1.0
+langchain_community>=0.0.4,<0.1.0
+langchain_text_splitters>=0.0.1,<0.1.0
 
 # Processamento de documentos DOCX
 python-docx==0.8.11
