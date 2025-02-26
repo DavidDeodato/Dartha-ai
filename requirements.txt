@@ -20,3 +20,6 @@ python-docx==0.8.11
 # Autenticação JWT e requisições HTTP
 PyJWT==2.6.0
 requests==2.28.2
+
+#  - para ler os embeddings em faiss
+faiss-cpu==1.7.3
