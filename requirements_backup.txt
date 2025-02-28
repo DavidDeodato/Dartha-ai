@@ -1,0 +1,12 @@
+python-dotenv==1.0.1
+psycopg==3.2.4
+fastapi==0.115.8
+uvicorn==0.34.0
+pydantic==2.10.6
+langchain_openai==0.3.7
+langchain_community==0.3.18
+langchain_text_splitters==0.3.6
+python-docx==1.1.2
+PyJWT==2.6.0
+requests==2.32.3
+faiss-cpu==1.10.0

@@ -23,16 +23,20 @@ class GIX5Agent:
         # Usando o mesmo LLM do código antigo para garantir o uso do contexto
         self.llm = OpenAI(openai_api_key=OPENAI_API_KEY)
 
-    def answer_question(self, question: str, chat_history: list) -> str:
+    def answer_question(self, question: str, chat_history: list = None) -> str:
         """
         Gera uma resposta para a pergunta baseada no histórico do chat e no material do curso GIX5.
         O fluxo é:
-          1. Formatação do histórico do chat.
+          1. Formatação do histórico do chat (se existir).
           2. Recuperação de documentos relevantes com base na pergunta.
           3. Geração de uma resposta inicial com o contexto.
           4. Refinamento da resposta para torná-la mais clara e didática.
         """
-        # 1. Formatação do histórico do chat
+        # 1. Verifica se há histórico válido no request
+        if not chat_history or not isinstance(chat_history, list):
+            chat_history = []
+
+        # Formatação do histórico do chat (se existir)
         history_context = "\n".join(
             [msg["message"] for msg in chat_history if isinstance(msg, dict) and "message" in msg]
         ) if chat_history else "Sem histórico disponível."
@@ -70,15 +74,3 @@ Agora, reescreva a resposta para que fique mais clara, objetiva e didática, rem
         refined_response = self.llm.invoke(refine_prompt)
 
         return refined_response
-
-# Exemplo de teste (para uso local)
-if __name__ == "__main__":
-    agent = GIX5Agent()
-    # Exemplo de histórico de chat
-    chat_history = [
-        {"message": "Olá, preciso de ajuda com o curso."},
-        {"message": "Não entendi a parte dos embeddings."}
-    ]
-    pergunta = "Como funciona a criação dos embeddings no curso GIX5?"
-    resposta = agent.answer_question(pergunta, chat_history)
-    print("Resposta Refinada:\n", resposta)

@@ -3,6 +3,8 @@ from pydantic import BaseModel
 from database import get_connection
 from db_queries import create_chat, save_message, get_chat_history
 from models.gix5 import GIX5Agent
+from models.pee import PEEAgent
+from models.legal import LegalAI
 from auth import authenticate_request  # 🔒 Middleware de autenticação
 import time
 
@@ -18,7 +20,9 @@ def read_root():
 
 # Dicionário de agentes
 agents = {
-    "GIX5": GIX5Agent()
+    "GIX5": GIX5Agent(),
+    "PEE": PEEAgent(),
+    "LEGAL": LegalAI()
 }
 
 # Modelos de entrada para os endpoints
