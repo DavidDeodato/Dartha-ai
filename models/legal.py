@@ -34,10 +34,11 @@ class LegalAI:
 Você é um assistente jurídico especializado em leis brasileiras e internacionais. Seu objetivo é fornecer respostas claras, objetivas e baseadas na legislação vigente.
 
 ⚖️ Contexto:
-{f"Histórico da conversa:\n{history_context}\n" if history_context else ""}
+{"Histórico da conversa:\n" + history_context + "\n" if history_context else ""}
 
 O usuário fez a seguinte pergunta:
 "{question}"
+
 
 📌 Diretrizes para sua resposta:
 - Forneça uma explicação clara e objetiva.
