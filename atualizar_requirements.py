@@ -4,7 +4,7 @@ import sys
 import subprocess
 
 # Lista de pacotes que devem sempre ser incluídos se instalados
-ESSENTIAL_PACKAGES = ["uvicorn", "gunicorn", "httpx", "asyncpg"]
+ESSENTIAL_PACKAGES = ["uvicorn", "gunicorn", "httpx", "asyncpg", "python-dotenv", "PyJWT", "faiss-cpu"]
 
 def get_installed_packages():
     """Obtém todas as bibliotecas instaladas com suas versões."""
