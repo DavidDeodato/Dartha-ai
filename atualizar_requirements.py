@@ -3,10 +3,12 @@ import pkg_resources
 import sys
 import subprocess
 
+# Lista de pacotes que devem sempre ser incluídos se instalados
+ESSENTIAL_PACKAGES = ["uvicorn", "gunicorn", "httpx", "asyncpg"]
+
 def get_installed_packages():
     """Obtém todas as bibliotecas instaladas com suas versões."""
-    installed_packages = {pkg.key: pkg.version for pkg in pkg_resources.working_set}
-    return installed_packages
+    return {pkg.key: pkg.version for pkg in pkg_resources.working_set}
 
 def is_standard_library(module_name):
     """Verifica se um módulo faz parte da biblioteca padrão do Python."""
@@ -45,6 +47,11 @@ def generate_requirements_txt(output_file="requirements.txt"):
     for module in imported_modules:
         if module in installed_packages and not is_standard_library(module):
             used_packages[module] = installed_packages[module]
+
+    # Adicionar pacotes essenciais se estiverem instalados
+    for essential in ESSENTIAL_PACKAGES:
+        if essential in installed_packages and essential not in used_packages:
+            used_packages[essential] = installed_packages[essential]
 
     # Verificar se há conflitos de versões (opcional)
     outdated_packages = subprocess.run([sys.executable, "-m", "pip", "list", "--outdated"],
