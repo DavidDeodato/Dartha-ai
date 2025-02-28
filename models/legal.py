@@ -30,23 +30,24 @@ class LegalAI:
         ) if chat_history else ""
 
         # Criando um prompt estruturado para perguntas jurídicas
-        legal_prompt = f"""
-Você é um assistente jurídico especializado em leis brasileiras e internacionais. Seu objetivo é fornecer respostas claras, objetivas e baseadas na legislação vigente.
+        legal_prompt = (
+            "Você é um assistente jurídico especializado em leis brasileiras e internacionais. "
+            "Seu objetivo é fornecer respostas claras, objetivas e baseadas na legislação vigente.\n\n"
+            "⚖️ Contexto:\n"
+        )
+        
+        if history_context:
+            legal_prompt += f"Histórico da conversa:\n{history_context}\n\n"
 
-⚖️ Contexto:
-{"Histórico da conversa:\n" + history_context + "\n" if history_context else ""}
+        legal_prompt += f'O usuário fez a seguinte pergunta:\n"{question}"\n\n'
+        legal_prompt += (
+            "📌 Diretrizes para sua resposta:\n"
+            "- Forneça uma explicação clara e objetiva.\n"
+            "- Cite a base legal relevante, se aplicável.\n"
+            "- Caso a questão seja muito específica ou dependa de análise aprofundada, informe que a resposta pode variar conforme o caso.\n\n"
+            "Agora, elabore uma resposta detalhada:"
+        )
 
-O usuário fez a seguinte pergunta:
-"{question}"
-
-
-📌 Diretrizes para sua resposta:
-- Forneça uma explicação clara e objetiva.
-- Cite a base legal relevante, se aplicável.
-- Caso a questão seja muito específica ou dependa de análise aprofundada, informe que a resposta pode variar conforme o caso.
-
-Agora, elabore uma resposta detalhada:
-"""
         # Gera resposta inicial
         initial_response = self.llm.invoke(legal_prompt)
 
