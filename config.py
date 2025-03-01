@@ -19,9 +19,11 @@ SEGMENT_CONFIG = {
         "models": {
             "GIX5": lambda api_key: get_model_class("gix5", "GIX5Agent")(api_key),
             "LEGAL": lambda api_key: get_model_class("legal", "LegalAI")(api_key),
+            "BNCC": lambda api_key: get_model_class("bncc", "BNCCAgent")(api_key),
+            "PEE": lambda api_key: get_model_class("pee", "PEEAgent")(api_key),
         }
     },
-    "BNCC": {
+    "ESCOLAS": {
         "api_key": os.getenv("OPENAI_API_KEY"),
         "db_url": os.getenv("DATABASE_URL"),  # 🔥 Verifique se isso não está retornando None
         "models": {
