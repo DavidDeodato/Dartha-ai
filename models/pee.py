@@ -4,12 +4,13 @@ from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_openai import OpenAI
 
+
 # Carregar variáveis do ambiente
 load_dotenv()
-OPENAI_API_KEY = os.getenv("OPEN_AI_API_KEY")
+
 
 class PEEAgent:
-    def __init__(self):
+    def __init__(self, api_key):
         """Inicializa o agente carregando os embeddings disponíveis dentro de PEE (PEX, PDC, PAF, PLX e Geral)."""
         
         # 📌 Diretório base dos embeddings
@@ -33,7 +34,7 @@ class PEEAgent:
         self.vector_stores = []
         for path in valid_paths:
             try:
-                store = FAISS.load_local(path, OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY), allow_dangerous_deserialization=True)
+                store = FAISS.load_local(path, OpenAIEmbeddings(openai_api_key=api_key), allow_dangerous_deserialization=True)
                 self.vector_stores.append(store)
             except Exception as e:
                 print(f"⚠️ Erro ao carregar embeddings de {path}: {e}")
@@ -43,7 +44,7 @@ class PEEAgent:
             raise ValueError("❌ Não foi possível carregar nenhum embedding válido para PEE.")
         
         self.retrievers = [store.as_retriever() for store in self.vector_stores]
-        self.llm = OpenAI(openai_api_key=OPENAI_API_KEY)
+        self.llm = OpenAI(openai_api_key=api_key)
 
     def answer_question(self, question: str, chat_history: list = None) -> str:
         """

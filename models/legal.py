@@ -4,12 +4,12 @@ from langchain_openai import OpenAI
 
 # Carregar variáveis do ambiente
 load_dotenv()
-OPENAI_API_KEY = os.getenv("OPEN_AI_API_KEY")
+
 
 class LegalAI:
-    def __init__(self):
+    def __init__(self, api_key):
         """Inicializa o modelo jurídico, focado em consultas sobre direito e legislação."""
-        self.llm = OpenAI(openai_api_key=OPENAI_API_KEY)
+        self.llm = OpenAI(openai_api_key=api_key)
 
     def answer_question(self, question: str, chat_history: list = None) -> str:
         """

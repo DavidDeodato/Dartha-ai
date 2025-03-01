@@ -7,21 +7,27 @@ from langchain_community.embeddings import OpenAIEmbeddings
 # Importação para o LLM (usando a classe OpenAI, conforme o código antigo)
 from langchain_openai import OpenAI
 
+
+
 # Carregar variáveis do ambiente
 load_dotenv()
-OPENAI_API_KEY = os.getenv("OPEN_AI_API_KEY")
+
 
 class GIX5Agent:
-    def __init__(self):
+    def __init__(self, api_key):
+
+        # - pegando a chave api do openai
+        self.api_key = api_key
+
         """Inicializa o agente carregando os embeddings do curso GIX5."""
         self.vector_store = FAISS.load_local(
             "embeddings/GIX5",
-            OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY),
+            OpenAIEmbeddings(openai_api_key=api_key),
             allow_dangerous_deserialization=True  # Permite carregamento seguro do FAISS
         )
         self.retriever = self.vector_store.as_retriever()
         # Usando o mesmo LLM do código antigo para garantir o uso do contexto
-        self.llm = OpenAI(openai_api_key=OPENAI_API_KEY)
+        self.llm = OpenAI(openai_api_key=api_key)
 
     def answer_question(self, question: str, chat_history: list = None) -> str:
         """
