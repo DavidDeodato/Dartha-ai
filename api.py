@@ -6,10 +6,26 @@ from db_queries import create_chat, save_message, get_chat_history
 from auth import authenticate_request
 import time
 from config import SEGMENT_CONFIG
+from fastapi.middleware.cors import CORSMiddleware
 
 AUTENTICACAO_ATIVADA = False
 
 app = FastAPI()
+
+
+
+
+# - desativando restrições para todos (cors) ---
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Liberar para todos
+    allow_credentials=True,
+    allow_methods=["*"],  # Todos os métodos (GET, POST, etc.)
+    allow_headers=["*"],  # Todos os headers
+)
+# ---------------------------------------
+
 
 #testezinho
 @app.get("/")
