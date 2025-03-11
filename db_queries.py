@@ -1,16 +1,16 @@
 from database import get_connection
 import uuid
 
-def create_chat(subject, user_id, segment):
+def create_chat(subject, user_id, segment, name_chat, model=None):
     """Cria um novo chat baseado no segmento correto."""
     conn = get_connection(segment)
     try:
         with conn.cursor() as cur:
             cur.execute("""
-                INSERT INTO "Chat" (id, subject, user_id, external_chat_id, created_at, updated_at) 
-                VALUES (%s, %s, %s, %s, NOW(), NOW()) 
+                INSERT INTO "Chat" (id, name, subject, "AI", user_id, external_chat_id, created_at, updated_at) 
+                VALUES (%s, %s, %s, %s, %s, %s, NOW(), NOW()) 
                 RETURNING id;
-            """, (str(uuid.uuid4()), subject, user_id, str(uuid.uuid4())))
+            """, (str(uuid.uuid4()), name_chat, subject, model if model else 'GPT_4_O', user_id, str(uuid.uuid4())))
             
             chat_id = cur.fetchone()["id"]
             conn.commit()
@@ -23,18 +23,19 @@ def create_chat(subject, user_id, segment):
     finally:
         conn.close()
 
-def save_message(chat_id, sender_type, message, segment):
+def save_message(chat_id, sender_type, message, segment, file_name=None):
     """Salva uma mensagem no chat."""
+    print(f"nome do arquivo: {file_name}")
     try:
         with get_connection(segment) as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    INSERT INTO "Message" (id, chat_id, "from", message, created_at)
-                    VALUES (gen_random_uuid(), %s, %s, %s, NOW())
+                    INSERT INTO "Message" (id, chat_id, "from", message, file_ids, created_at)
+                    VALUES (gen_random_uuid(), %s, %s, %s, %s, NOW())
                     RETURNING id;
                     """,
-                    (chat_id, sender_type, message),
+                    (chat_id, sender_type, message, file_name if file_name else None),
                 )
                 message_id = cur.fetchone()["id"]
                 conn.commit()

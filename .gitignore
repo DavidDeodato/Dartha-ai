@@ -44,3 +44,17 @@ yarn-error.log*
 
 # idea files
 .idea
+
+
+# - adicionar_modelo - ignorar o arquivo adicionar_modelo.py
+#ignorar o arquivo adicionar_modelo.py
+adicionar_modelo.py
+
+
+# - ola.py
+ola.py
+
+# -tirando o arquivo de teste do claude
+po.py
+
+tanto.py
